@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}AllRugby Players{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">AllRugby Players 2024/2025</h2>
+
+<div class="table-container table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Height</th>
+                <th>Weight</th>
+                <th>Bio</th>
+                <th>Career</th>
+                <th>Profile</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ player.name or "-" }}</td>
+                    <td>{{ player.age or "-" }} yrs</td>
+                    <td>{{ player.height_m or "-" }} m</td>
+                    <td>{{ player.weight_kg or "-" }} kg</td>
+                    <td>{{ player.bio or "-" }}</td>
+                    <td>
+                        <ul class="mb-0 ps-3" style="list-style-type: disc;">
+                            {% for team in player.career %}
+                                <li>{{ team or "-" }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <a class="profile-link" href="{{ player.profile_url or "-" }}" target="_blank">View Profile</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">No players found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination UI -->
+    <nav>
+        <ul class="pagination justify-content-center" id="pagination">
+            <!-- Dynamic page buttons will be injected here -->
+        </ul>
+    </nav>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const rowsPerPage = 10;
+            const table = document.querySelector("table");
+            const rows = table.querySelectorAll("tbody tr");
+            const pagination = document.getElementById("pagination");
+
+            const totalPages = Math.ceil(rows.length / rowsPerPage);
+            let currentPage = 1;
+
+            function displayRows(page) {
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+                rows.forEach((row, index) => {
+                    row.style.display = index >= start && index < end ? "" : "none";
+                });
+            }
+
+            function createPaginationButtons() {
+                pagination.innerHTML = "";
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const li = document.createElement("li");
+                    li.className = "page-item" + (i === currentPage ? " active" : "");
+                    const a = document.createElement("a");
+                    a.className = "page-link";
+                    a.href = "#";
+                    a.textContent = i;
+                    a.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        currentPage = i;
+                        displayRows(currentPage);
+                        createPaginationButtons();
+                    });
+                    li.appendChild(a);
+                    pagination.appendChild(li);
+                }
+            }
+
+            displayRows(currentPage);
+            createPaginationButtons();
+        });
+    </script>
+
+</div>
+{% endblock %}

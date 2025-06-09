@@ -1,0 +1,16 @@
+# pycache files
+__pycache__/
+*.pyc
+
+# all dubug images
+snapshots
+*.png
+
+# environment files
+.env
+venv
+
+# log files
+logs_allrugby
+logs_rugbypass
+logs_worldathletics

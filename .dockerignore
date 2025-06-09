@@ -1,0 +1,19 @@
+# env file
+.env
+
+# log files
+logs_allrugby
+logs_rugbypass
+logs_worldathletics
+
+# Extra files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.log
+.env.*
+.envrc
+.vscode/
