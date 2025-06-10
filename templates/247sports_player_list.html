@@ -1,21 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}AllRugby Players{% endblock %}
+{% block title %}247Sports Players{% endblock %}
 
 {% block content %}
-<h2 class="text-center mb-4">AllRugby Players 2024/2025</h2>
+<h2 class="text-center mb-4">247Sports Players</h2>
 
 <div class="table-container table-responsive">
     <table class="table table-bordered table-hover align-middle">
-        <thead>
+        <thead class="table-light">
             <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>Age</th>
+                <th>Position</th>
                 <th>Height</th>
                 <th>Weight</th>
-                <th>Bio</th>
-                <th>Career</th>
+                <th>High School</th>
+                <th>City</th>
+                <th>Experience</th>
                 <th>Profile</th>
             </tr>
         </thead>
@@ -23,25 +24,20 @@
             {% for player in players %}
                 <tr>
                     <td>{{ loop.index }}</td>
-                    <td>{{ player.name or "-" }}</td>
-                    <td>{{ player.age or "-" }} yrs</td>
-                    <td>{{ player.height_m or "-" }} m</td>
-                    <td>{{ player.weight_kg or "-" }} kg</td>
-                    <td>{{ player.bio or "-" }}</td>
+                    <td>{{ player["Player Name"] or "-" }}</td>
+                    <td>{{ player["POS"] or "-" }}</td>
+                    <td>{{ player["Height"] or "-" }}</td>
+                    <td>{{ player["Weight"] or "-" }} lbs</td>
+                    <td>{{ player["High School"] | trim or "-" }}</td>
+                    <td>{{ player["City"] or "-" }}</td>
+                    <td>{{ player["Exp"] or "-" }}</td>
                     <td>
-                        <ul class="mb-0 ps-3" style="list-style-type: disc;">
-                            {% for team in player.career %}
-                                <li>{{ team or "-" }}</li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                    <td>
-                        <a class="profile-link" href="{{ player.profile_url or "-" }}" target="_blank">View Profile</a>
+                        <a class="profile-link" href="{{ player["Profile URL"] or "#" }}" target="_blank">View Profile</a>
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="8" class="text-center text-muted">No players found.</td>
+                    <td colspan="9" class="text-center text-muted">No players found.</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -87,7 +83,6 @@
                         currentPage = i;
                         displayRows(currentPage);
                         createPaginationButtons();
-                        window.scrollTo({top: document.body.scrollHeight, behaviour: "smooth"})
                     });
                     li.appendChild(a);
                     pagination.appendChild(li);

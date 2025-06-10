@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}ProBallers Players{% endblock %}
+
+{% block content %}
+
+<h2 class="text-center mb-4">ProBallers Players</h2>
+
+<div class="table-container table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Player Name</th>
+                <th>Team Name</th>
+                <th>Age</th>
+                <th>Height</th>
+                <th>Home Country</th>
+                <th>Bio</th>
+                <th>Date of Birth</th>
+                <th>Game Stats</th>
+                <th>Profile</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ player["Basketball Player"] or "-" }}</td>
+                    <td>{{ player["Basketball Team"] or "-" }}</td>
+                    <td>{{ player["Age"] or "-" }} years</td>
+                    <td>{{ player["Height"] or "-" }}</td>
+                    <td>{{ player["Home Country"] or "-" }}</td>
+                    <td>{{ player["Bio"] or "-" }}</td>
+                    <td>{{ player["Date-of-birth"] or "-" }}</td>
+                    <td>
+                        <ul class="mb-0 ps-3" style="list-style-type: disc;">
+                            {% for stat in player["game_stats"] %}
+                                <li>{{ stat or "-" }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <a class="profile-link" href="{{ player["Profile Link"] or "#" }}" target="_blank">
+                            View Profile
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10" class="text-center text-muted">No player data available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination UI -->
+    <nav>
+        <ul class="pagination justify-content-center" id="pagination">
+            <!-- Dynamic page buttons will be injected here -->
+        </ul>
+    </nav>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const rowsPerPage = 10;
+            const table = document.querySelector("table");
+            const tbody = table.querySelector("tbody");
+            // Filter rows to only those with actual player data (exclude "No data" row)
+            const allRows = Array.from(tbody.querySelectorAll("tr")).filter(row => !row.classList.contains("no-data"));
+            const pagination = document.getElementById("pagination");
+
+            const totalPages = Math.ceil(allRows.length / rowsPerPage);
+            let currentPage = 1;
+
+            function displayRows(page) {
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+
+                allRows.forEach((row, index) => {
+                    row.style.display = (index >= start && index < end) ? "" : "none";
+                });
+
+                // Hide "No data" row if there are players; else show it
+                const noDataRow = tbody.querySelector(".no-data");
+                if (noDataRow) {
+                    noDataRow.style.display = allRows.length === 0 ? "" : "none";
+                }
+            }
+
+            function createPaginationButtons() {
+                pagination.innerHTML = "";
+
+                if (totalPages <= 1) return;
+
+                function createPageItem(i, label = null, active = false, disabled = false) {
+                    const li = document.createElement("li");
+                    li.className = "page-item" + (active ? " active" : "") + (disabled ? " disabled" : "");
+                    const a = document.createElement("a");
+                    a.className = "page-link";
+                    a.href = "#";
+                    a.textContent = label || i;
+                    if (!disabled) {
+                        a.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            currentPage = i;
+                            displayRows(currentPage);
+                            createPaginationButtons();
+                            window.scrollTo({top: document.body.scrollHeight, behaviour: "smooth"})
+                        });
+                    }
+                    li.appendChild(a);
+                    return li;
+                }
+
+                const maxVisible = 5; // Show max 5 page numbers
+                const startPage = Math.max(1, currentPage - 2);
+                const endPage = Math.min(totalPages, currentPage + 2);
+
+                // First page
+                if (startPage > 1) {
+                    pagination.appendChild(createPageItem(1, "1", false));
+                    if (startPage > 2) {
+                        const ellipsis = document.createElement("li");
+                        ellipsis.className = "page-item disabled";
+                        ellipsis.innerHTML = `<span class="page-link">...</span>`;
+                        pagination.appendChild(ellipsis);
+                    }
+                }
+
+                // Page buttons around current
+                for (let i = startPage; i <= endPage; i++) {
+                    pagination.appendChild(createPageItem(i, null, i === currentPage));
+                }
+
+                // Last page
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        const ellipsis = document.createElement("li");
+                        ellipsis.className = "page-item disabled";
+                        ellipsis.innerHTML = `<span class="page-link">...</span>`;
+                        pagination.appendChild(ellipsis);
+                    }
+                    pagination.appendChild(createPageItem(totalPages, totalPages.toString(), false));
+                }
+            }
+
+            // Add a "no-data" row if tbody is empty
+            if (allRows.length === 0) {
+                const noDataRow = document.createElement("tr");
+                noDataRow.classList.add("no-data");
+                noDataRow.innerHTML = `<td colspan="10" class="text-center text-muted">No player data available.</td>`;
+                tbody.appendChild(noDataRow);
+            }
+
+            displayRows(currentPage);
+            createPaginationButtons();
+        });
+
+    </script>
+
+</div>
+
+{% endblock %}

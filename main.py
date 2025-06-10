@@ -17,10 +17,17 @@ templates = Jinja2Templates(directory="templates")
 allrugby_path = Path("logs_allrugby/player_data.json")
 rugbypass_path = Path("logs_rugbypass/player_data.json")
 worldathletics_path = Path("logs_worldathletics/player_data.json")
+sports247_path = Path("logs_247sports/player_data.json")
+eurobasket_path = Path("logs_eurobasket/player_data.json")
+proballers_path = Path("logs_proballers/player_data.json")
+
 
 allrugby_players = []
 rugbypass_players = []
 worldathletics_players = []
+sports247_players = []
+eurobasket_players = []
+proballers_players = []
 
 
 def load_players(path: str):
@@ -63,22 +70,41 @@ async def startup_event():
     worldathletics_players = load_players(worldathletics_path)
 
 
+sports247_players = load_players(sports247_path)
+eurobasket_players = load_players(eurobasket_path)
+proballers_players = load_players(proballers_path)
+
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
 
-@app.get("/one", response_class=HTMLResponse)
+@app.get("/allrugby", response_class=HTMLResponse)
 async def read_players(request: Request):
     return templates.TemplateResponse("allrugby_player_list.html", {"request": request, "players": allrugby_players})
 
 
-@app.get("/two", response_class=HTMLResponse)
+@app.get("/rugbypass", response_class=HTMLResponse)
 async def read_players(request: Request):
     return templates.TemplateResponse("rugbypass_player_list.html", {"request": request, "players": rugbypass_players})
 
 
-@app.get("/three", response_class=HTMLResponse)
+@app.get("/worldathletics", response_class=HTMLResponse)
 async def read_players(request: Request):
     return templates.TemplateResponse("worldathletics_player_list.html", {"request": request, "players": worldathletics_players})
+
+
+@app.get("/247sports", response_class=HTMLResponse)
+async def read_players(request: Request):
+    return templates.TemplateResponse("247sports_player_list.html", {"request": request, "players": sports247_players})
+
+
+@app.get("/eurobasket", response_class=HTMLResponse)
+async def read_players(request: Request):
+    return templates.TemplateResponse("eurobasket_player_list.html", {"request": request, "players": eurobasket_players})
+
+
+@app.get("/proballers", response_class=HTMLResponse)
+async def read_players(request: Request):
+    return templates.TemplateResponse("proballers_player_list.html", {"request": request, "players": proballers_players})
