@@ -9,6 +9,8 @@ from scraping_allrugby import AllRugbyScraper
 from scraping_rugbypass import RugbyPassScrapper
 from scraping_worldathletics import WorldAthleticsScrapper
 
+from scrapper import USBasketScraper, Proballer, sports247
+
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -68,6 +70,18 @@ async def startup_event():
     else:
         print("WorldAthletics JSON already exists, skipping scraping.")
     worldathletics_players = load_players(worldathletics_path)
+
+
+    # usbasket = USBasketScraper()
+    # usbasket.start()
+
+    # proballer = Proballer()
+    # proballer.start()
+
+    sport_obj = sports247()
+    sport_obj.start()
+
+
 
 
 sports247_players = load_players(sports247_path)

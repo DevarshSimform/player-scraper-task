@@ -32,7 +32,7 @@ class AllRugbyScraper:
         chrome_options = Options()
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         # chrome_options.add_argument("--start-fullscreen")
-        chrome_options.add_argument('--headless')  # Run Chrome in headless mode
+        # chrome_options.add_argument('--headless')  # Run Chrome in headless mode
         chrome_options.add_argument('--disable-gpu')  # (optional) Disable GPU acceleration, recommended in headless mode
         chrome_options.add_argument('--no-sandbox')  # (optional) Required in some Linux environments
         chrome_options.add_argument('--window-size=1920,1080')  # Optional: set window size to avoid resolution issues
